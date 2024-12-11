@@ -7,13 +7,29 @@
 
 import time, math
 import pygame
+import RPi.GPIO as GPIO         
+
+buttons = {
+           "A":5,
+           "B":6,
+           "UP":17,
+           "DOWN":22,
+           "LEFT":27,
+           "RIGHT":23,
+           "CENTER":4
+}
+
+# setup gpio
+GPIO.setmode(GPIO.BCM)         
+for btn in buttons:
+    GPIO.setup(buttons[btn], GPIO.IN)
+
+def pressed(btn) :
+    return ( GPIO.input(buttons[btn]) != True) 
 
 WIDTH = HEIGHT = 240
 
 screen = pygame.display.set_mode()
-
-def button(btn) :
-   return 0
 
 def mandel(i,res) :
     max_iter = 255  // res
@@ -82,28 +98,28 @@ while True:
             #print(f"resolution {res} in {t_end - t_start} ms")
             res = res // 2
             
-        if button("X") :
+        if pressed("CENTER") :
             invertcolors = not invertcolors
             break
-        if button("X") :
+        if pressed("CENTER") :
             grayscale = not grayscale
             break
-        if button("X") :
-            scale = scale * 0.9
+        if pressed("B") :
+            scale = scale * 0.95
             break
-        if button("X") :
-            scale = scale * 1.1
+        if pressed("A") :
+            scale = scale * 1.05
             break
-        move = scale *5
-        if button("X") :
+        move = scale *2
+        if pressed("LEFT") :
             cx -= move
             break
-        if button("X") :
+        if pressed("RIGHT") :
             cx += move
             break
-        if button("X") :
+        if pressed("UP") :
             cy -= move
             break
-        if button("X") :
+        if pressed("DOWN") :
             cy += move
             break
